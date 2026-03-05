@@ -83,7 +83,7 @@ primaryColor (#0066CC)
 | プロパティ | 用途 | 未指定時の動作 |
 |---|---|---|
 | `secondaryColor` | セカンダリ色（バッジ・サブボタン等） | primaryColor から自動生成 |
-| `ctaColor` | CTA 色（お申し込みボタン・CTA カード背景等） | primaryColor と同じ色を使用 |
+| `ctaColor` | CTA（Call To Action＝行動喚起）色。「お申し込みはこちら」ボタンなど、ユーザーに最も押してほしい要素の強調色 | primaryColor と同じ色を使用 |
 
 ```
 テナント設定 (tenants.ts)
