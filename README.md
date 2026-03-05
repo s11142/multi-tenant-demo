@@ -32,6 +32,7 @@ src/
 │           ├── confirm/page.tsx    #   確認画面
 │           └── complete/page.tsx   #   完了画面
 ├── components/
+│   ├── apply-notes.tsx             # テナント固有 申し込み注意事項
 │   ├── layout/
 │   │   ├── header.tsx              # ヘッダー（ロゴ・テナント名・連絡先）
 │   │   └── footer.tsx              # フッター
@@ -114,6 +115,26 @@ ctaColor 未指定:
 
 CSS 変数 `--cta` / `--cta-foreground` は `theme.ts` の `generateThemeVariables()` が**常に** inline style としてセットします。`globals.css` の `:root` フォールバックには依存しません（`:root` のデフォルト値は inline style が未適用のスコープ外ページ用の安全策です）。
 
+### テナント固有コンテンツ
+
+色以外にも、テナント設定にオプショナルなデータを追加することでテナント固有の UI を出し分けできます。
+
+| プロパティ | 用途 | 未指定時の動作 |
+|---|---|---|
+| `applyNotes` | 申し込みフォーム上部に表示する注意事項（`{heading, body}` の配列） | 何も表示しない |
+
+```typescript
+// tenants.ts の例
+applyNotes: [
+  {
+    heading: "開栓工事の立ち会いについて",
+    body: "開栓工事にはお客さまの立ち会いが必要です。...",
+  },
+],
+```
+
+**設計方針:** テナントコードによるハードコード分岐は行わず、設定値の有無でコンポーネントの表示を制御します。将来テナント固有の項目を追加する場合も同じパターン（`tenants.schema.ts` にオプショナルフィールド追加 → コンポーネントで条件レンダリング）で拡張できます。
+
 ### 登録済みテナント
 
 | テナントコード | テナント名 | ブランドカラー | CTA カラー |
@@ -170,6 +191,7 @@ npm run test:e2e   # E2E テスト (Playwright)
 - ブランドカラー（サイト全体の配色）
 - ロゴ画像
 - 会社名・連絡先
+- 申し込み時の注意事項（設定がある場合のみ表示）
 
 逆に、**画面の構造やフォームのロジックは全テナント共通**です。
 
@@ -232,6 +254,7 @@ npm run test:e2e   # E2E テスト (Playwright)
   primaryColor: "#00A550",
   // secondaryColor: "#...",  // 任意: セカンダリ色をカスタマイズ
   // ctaColor: "#...",        // 任意: CTA ボタン・カードの色をカスタマイズ
+  // applyNotes: [...],       // 任意: 申し込み画面の注意事項
   logoPath: "/tenants/midori-energy/logo.svg",
   contactPhone: "0120-XXX-004",
   contactEmail: "info@midori-energy-example.jp",
@@ -239,7 +262,7 @@ npm run test:e2e   # E2E テスト (Playwright)
 }
 ```
 
-> **Tip:** `secondaryColor` / `ctaColor` はオプショナルです。指定しなければ `primaryColor` から自動で生成・フォールバックされるので、特別な要望がない限り省略してOKです。
+> **Tip:** `secondaryColor` / `ctaColor` / `applyNotes` はすべてオプショナルです。色は指定しなければ `primaryColor` から自動で生成・フォールバックされ、`applyNotes` は省略すれば注意事項は表示されません。
 
 ### 2. ロゴ画像を配置
 
@@ -276,6 +299,9 @@ npx shadcn@latest add <component-name>
 Tailwind のクラス（`bg-primary`, `text-primary-foreground` 等）はテナントごとの CSS 変数を参照するため、テナントが変わると自動的に配色が変わります。
 
 ## よくある質問
+
+**Q: テナントごとに申し込み画面の注意事項を表示したい**
+A: `tenants.ts` で `applyNotes` を設定するだけです。`{heading, body}` の配列を渡すと、申し込みフォームの上部に Alert として表示されます。設定しなければ何も表示されません。
 
 **Q: テナントごとに異なるページレイアウトにできる？**
 A: 現在は全テナント共通レイアウトです。テナント固有のレイアウトが必要な場合は、`[tenant]/layout.tsx` で条件分岐するか、テナント固有のコンポーネントを作成してください。
