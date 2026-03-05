@@ -31,6 +31,16 @@ const tenants: TenantConfig[] = [
     contactPhone: "0120-XXX-003",
     contactEmail: "info@sakura-energy-example.jp",
     isActive: true,
+    applyNotes: [
+      {
+        heading: "開栓工事の立ち会いについて",
+        body: "開栓工事にはお客さまの立ち会いが必要です。工事日程は担当者よりご連絡いたしますので、ご都合のよい日時をお知らせください。",
+      },
+      {
+        heading: "お支払い方法について",
+        body: "お支払いはクレジットカードまたは口座振替からお選びいただけます。お申し込み完了後に届くメールからお手続きください。",
+      },
+    ],
   },
 ];
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,6 +10,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ApplyNotes } from "@/components/apply-notes";
+import { getTenantByCode } from "@/config/tenants";
 
 type Props = {
   params: Promise<{ tenant: string }>;
@@ -16,6 +19,11 @@ type Props = {
 
 export default async function ApplyPage({ params }: Props) {
   const { tenant } = await params;
+  const config = getTenantByCode(tenant);
+
+  if (!config) {
+    notFound();
+  }
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-12">
@@ -27,6 +35,11 @@ export default async function ApplyPage({ params }: Props) {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {config.applyNotes && config.applyNotes.length > 0 && (
+            <div className="mb-6">
+              <ApplyNotes notes={config.applyNotes} />
+            </div>
+          )}
           <form className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="name">お名前</Label>

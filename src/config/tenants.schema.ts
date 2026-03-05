@@ -1,3 +1,8 @@
+export type ApplyNoteSection = {
+  heading: string;
+  body: string;
+};
+
 export type TenantConfig = {
   code: string;
   name: string;
@@ -9,4 +14,5 @@ export type TenantConfig = {
   contactPhone: string;
   contactEmail: string;
   isActive: boolean;
+  applyNotes?: ApplyNoteSection[];
 };
